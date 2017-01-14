@@ -1,0 +1,25 @@
+{
+  "name": "datadeck",
+  "version": "1.0.0",
+  "main": "index.html",
+  "description": "datadeck app.",
+  "author": "",
+  "license": "MIT",
+  "js-flags": "--harmony",
+  "window": {
+    "title": "datadeck",
+    "toolbar": true,
+    "frame": true,
+    "width": 960,
+    "min-width": 960,
+    "height": 620
+  },
+  "dependencies": {
+    "element-ui": "^1.1.3",
+    "feathers": "^2.0.3",
+    "feathers-client": "^1.9.0",
+    "feathers-hooks": "^1.7.1",
+    "feathers-socketio": "^1.4.2",
+    "vue": "^2.1.8"
+  }
+}

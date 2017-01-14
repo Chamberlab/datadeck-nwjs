@@ -1,0 +1,18 @@
+doctype html
+html
+    head
+        title datadeck
+        link(rel='stylesheet', href='main.css', media='all')
+    body
+        dd-app-main#datadeck
+
+        include ./tpls/transport
+        include ./tpls/load-dataset
+        include ./tpls/channel-menu
+        include ./tpls/app-main
+
+        script(src='http://localhost:8787/socket.io/socket.io.js')
+        script(src='node_modules/feathers-client/dist/feathers.js')
+        script(src='node_modules/vue/dist/vue.js')
+        script(src='node_modules/element-ui/lib/index.js')
+        script(src='app.js')

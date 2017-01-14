@@ -1,0 +1,20 @@
+template#dd-app-main-tpl
+    el-row(:gutter="20")
+        el-col(:span="24")
+            dd-load-dataset(v-on:openset='handleDatasetOpen')
+            dd-channel-menu(:channel-layout='channelLayout', v-on:datalayout='handleDataLayout')
+
+        el-col(:span="24")
+            dd-transport(v-if='dataLayout')
+
+        el-col(:span="24", v-if='dataLayout')
+            el-tabs(v-model="activeName", @tab-click="handleTabs")
+                el-tab-pane(label="Data", name="data")
+                    el-collapse(v-model="selectedChannels")
+                        el-collapse-item(v-for='channel in dataLayout', :title="channel.title", :name="channel.data.uuid")
+                            el-progress(:text-inside="true", :stroke-width="18", :percentage="channel.data.value", :show-text="false")
+
+                el-tab-pane(label="Specs", name="spec")
+                    el-table(:data="dataLayout", border, style="width: 100%")
+                        el-table-column(prop="title", label="Channel Title")
+                        el-table-column(prop="data.unit", label="Unit")

@@ -1,0 +1,5 @@
+template#dd-channel-menu-tpl
+    el-menu(v-if='channelLayout.length > 0', mode="horizontal", @select="handleMenu", default-active="1")
+        el-submenu(v-for='set in channelLayout', :index="'set-' + (set.data.uuid || set.title)")
+            template(slot="title") {{ set.title }}
+            el-menu-item(v-for='channel in set.children', :index="'channel-' + channel.data.uuid", @click="openChannel") {{ channel.title }}

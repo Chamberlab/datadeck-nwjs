@@ -1,0 +1,9 @@
+dist: trusty
+language: node_js
+node_js:
+  - "6"
+  - "6.1"
+  - "7"
+script:
+  - npm test
+  - npm run all

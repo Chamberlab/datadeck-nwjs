@@ -1,0 +1,4 @@
+template#dd-load-dataset-tpl
+    el-card(v-if='!metaData')
+        el-input(placeholder='Enter data path...', v-model='dataPath')
+            el-button(@click="openDataSet", slot="append") Open
