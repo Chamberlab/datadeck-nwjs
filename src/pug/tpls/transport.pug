@@ -1,7 +1,8 @@
 template#dd-transport-tpl
     el-card
-        el-row
+        el-row(:gutter="20")
             el-col(:span="22")
-                el-time-picker(v-model="clockTime", :readonly="true", :editable="false", :clearable="false")
+                el-input.mono.largetext.el-input--large(v-model="statusToString", :readonly="true", :editable="false", :clearable="false")
             el-col(:span="2")
-                el-button(type="primary", icon="arrow-right") Play
+                el-button(v-if="!isPlaying", type="success", icon="arrow-right", @click="play") Play
+                el-button(v-if="isPlaying", type="danger", icon="close", @click="stop") Stop

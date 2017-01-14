@@ -4,11 +4,10 @@ let _appRef;
 
 const _opts = {
     channelLayout: [],
-    metaData: null,
-    dataPath: '/Users/anton/WebstormProjects/node-chamberlib/data/lmdb/20151208_15h59m12s_nanobrain'
+    metaData: null
 };
 
-class LoadDataset extends Vue {
+class DatasetLoad extends Vue {
     constructor(app) {
         super();
 
@@ -19,6 +18,11 @@ class LoadDataset extends Vue {
         this.methods = {
             openDataSet: _this.openDataSet
         };
+        this.props = {
+            dataPath: {
+                type: String
+            }
+        };
         this.data = function () {
             return _opts;
         };
@@ -28,7 +32,7 @@ class LoadDataset extends Vue {
         const _this = this,
             loading = window.ELEMENT.Loading.service({ fullscreen: true }),
             dsService = _appRef.service('datasets');
-        return dsService.find({ query: { dataPath:  _opts.dataPath } })
+        return dsService.find({ query: { dataPath:  _this.dataPath } })
             .then(function (metaData) {
                 let channels = [];
                 Object.keys(metaData.DataSet.DataChannels).map((key) => {
@@ -54,4 +58,4 @@ class LoadDataset extends Vue {
     }
 }
 
-export default LoadDataset;
+export default DatasetLoad;

@@ -51,7 +51,7 @@ module.exports = {
         hints: false
     },
     devtool: '#eval-source-map'
-}
+};
 
 if (process.env.NODE_ENV === 'production') {
     module.exports.devtool = '#source-map';
@@ -71,5 +71,5 @@ if (process.env.NODE_ENV === 'production') {
         new webpack.LoaderOptionsPlugin({
             minimize: false
         })
-    ])
+    ]);
 }

@@ -39,6 +39,7 @@ class ChannelMenu extends Vue {
         for (let set of this.channelLayout) {
             for (let channel of set.children) {
                 if (key.indexOf(channel.data.uuid) > 0) {
+                    this.$emit('channelselect', channel);
                     this.openChannel(channel);
                     break;
                 }
@@ -56,6 +57,7 @@ class ChannelMenu extends Vue {
                 _opts.selectedChannels.push(uuid);
                 return {
                     title: target.data.labels[i],
+                    timeRange: target.data.timeRange,
                     data: {
                         index: i,
                         value: 0.0,

@@ -1,0 +1,6 @@
+template#dd-channel-grid-tpl
+    el-row(:gutter="20", v-if="currentFrame && currentFrame._value")
+        el-col(:span="2", v-for="(value, i) in currentFrame._value")
+                el-progress(type="circle", style="width:100%",
+                    :percentage="Math.abs(value) * Math.pow(10,6)",
+                    :show-text="false", :stroke-width="10", :width="86", :status="value < 0 ? undefined : 'exception'")

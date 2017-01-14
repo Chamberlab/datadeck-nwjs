@@ -1,20 +1,19 @@
 template#dd-app-main-tpl
     el-row(:gutter="20")
         el-col(:span="24")
-            dd-load-dataset(v-on:openset='handleDatasetOpen')
-            dd-channel-menu(:channel-layout='channelLayout', v-on:datalayout='handleDataLayout')
+            dd-load-dataset(v-on:openset='handleDatasetOpen',
+                data-path='/Users/anton/WebstormProjects/node-chamberlib/data/lmdb/20151208_15h59m12s_nanobrain')
+            dd-channel-menu(:channel-layout='channelLayout',
+                v-on:datalayout='handleDataLayout', v-on:channelselect='handleChannelSelect')
 
         el-col(:span="24")
-            dd-transport(v-if='dataLayout')
+            dd-transport(v-if='dataLayout', :data-layout='dataLayout', :channel-key='channelKey',
+                data-path='/Users/anton/WebstormProjects/node-chamberlib/data/lmdb/20151208_15h59m12s_nanobrain')
 
         el-col(:span="24", v-if='dataLayout')
-            el-tabs(v-model="activeName", @tab-click="handleTabs")
+            el-tabs(v-model="activeName")
                 el-tab-pane(label="Data", name="data")
-                    el-collapse(v-model="selectedChannels")
-                        el-collapse-item(v-for='channel in dataLayout', :title="channel.title", :name="channel.data.uuid")
-                            el-progress(:text-inside="true", :stroke-width="18", :percentage="channel.data.value", :show-text="false")
-
+                    dd-channel-grid(:data-layout='dataLayout')
+                    // dd-channel-list(:channel-layout='channelLayout', :data-layout='dataLayout')
                 el-tab-pane(label="Specs", name="spec")
-                    el-table(:data="dataLayout", border, style="width: 100%")
-                        el-table-column(prop="title", label="Channel Title")
-                        el-table-column(prop="data.unit", label="Unit")
+                    dd-channel-specs(:data-layout='dataLayout')

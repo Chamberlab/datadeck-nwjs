@@ -1,0 +1,4 @@
+template#dd-channel-list-tpl
+    el-collapse(v-model="selectedChannels")
+        el-collapse-item(v-for='channel in dataLayout', :title="channel.title", :name="channel.data.uuid")
+            el-progress(:text-inside="true", :stroke-width="18", :percentage="channel.data.value", :show-text="false")

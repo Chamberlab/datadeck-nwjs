@@ -3,8 +3,8 @@
 const _opts = {
     activeName: 'data',
     channelLayout: [],
-    selectedChannels: [],
-    dataLayout: undefined
+    dataLayout: undefined,
+    channelKey: undefined
 };
 
 class AppMain extends Vue {
@@ -21,6 +21,9 @@ class AppMain extends Vue {
             },
             handleDataLayout(dataLayout) {
                 _opts.dataLayout = dataLayout;
+            },
+            handleChannelSelect(channel) {
+                _opts.channelKey = channel.data.uuid || channel.title;
             }
         };
         this.data = function () {
