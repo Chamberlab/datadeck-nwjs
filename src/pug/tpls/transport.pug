@@ -1,8 +1,15 @@
 template#dd-transport-tpl
-    el-card
-        el-row(:gutter="20")
-            el-col(:span="22")
-                el-input.mono.largetext.el-input--large(v-model="statusToString", :readonly="true", :editable="false", :clearable="false")
-            el-col(:span="2")
-                el-button(v-if="!isPlaying", type="success", icon="arrow-right", @click="play") Play
-                el-button(v-if="isPlaying", type="danger", icon="close", @click="stop") Stop
+    el-card(:body-style="{ padding: '10px' }")
+        el-form(label-width="100px")
+            el-row(:gutter="20")
+                el-col(:span="7").mono.gianttext
+                    p {{ timeToString }}
+                el-col(:span="4")
+                    el-form-item(label="Target FPS")
+                        el-input(v-model="fps")
+                el-col(:span="11")
+                    p.text-small Last frame (ms): ~{{ lastFrameTime }}ms
+                el-col(:span="2", style="float:right")
+                    el-button(v-if="!isPlaying", type="success", icon="arrow-right", @click="play") Play
+                    el-button(v-if="isPlaying", type="danger", icon="close", @click="stop") Stop
+                .clearfix

@@ -6,7 +6,7 @@ class DataStreamService {
         this._lmdbNode = undefined;
         this._outputUUID = undefined;
         this._lastFrameTime = 0;
-        this.events = ['dataframe'];
+        this.events = ['dataframe', 'playbackend'];
     }
 
     setup(app) {
@@ -32,14 +32,31 @@ class DataStreamService {
             new cl.quantities.Time(0.0)
         );
 
+        this._valueHistory = undefined;
+        this._valueCount = 0;
+
         this._lmdbNode.outputs[this._outputUUID].stream.pipe(through2.obj(function (chunk, enc, cb) {
             let start = Date.now();
             setTimeout(cb, 1000 / params.query.fps);
-            _this.emit('dataframe', {
-                _value: Array.from(chunk._value),
-                _time: chunk._time,
-                _lastFrameTime: _this._lastFrameTime
-            });
+            if (this._valueCount === params.query.skip) {
+                _this.emit('dataframe', {
+                    _value: _this._valueHistory.map(function (val, i) {
+                        return _this._valueHistory[i] / _this._valueCount;
+                    }),
+                    _time: chunk._time,
+                    _lastFrameTime: _this._lastFrameTime
+                });
+                _this._valueHistory = undefined;
+                _this._valueCount = 0;
+            } else {
+                if (!_this._valueHistory) {
+                    _this._valueHistory = new Array(chunk._value.length).fill(0);
+                }
+                chunk._value.map(function (val, i) {
+                    _this._valueHistory[i] += val;
+                });
+                _this._valueCount += 1;
+            }
             _this._lastFrameTime = Date.now() - start;
         }))
         .once('end', function () {
@@ -53,6 +70,14 @@ class DataStreamService {
 
         this._lmdbNode.startOutput(this._outputUUID);
 
+        return Promise.resolve(this._outputUUID);
+    }
+
+    remove(outputUUID) {
+        if (this._lmdbNode) {
+            this._lmdbNode.endOutput(outputUUID);
+            this._outputUUID = undefined;
+        }
         return Promise.resolve();
     }
 }

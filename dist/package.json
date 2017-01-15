@@ -3,16 +3,17 @@
   "version": "1.0.0",
   "main": "index.html",
   "description": "datadeck app.",
-  "author": "",
+  "author": "A. Koch / Chamberlab",
   "license": "MIT",
   "js-flags": "--harmony",
   "window": {
-    "title": "datadeck",
+    "title": "Chamberlab Datadeck",
+    "icon": "assets/icon_256x256.png",
     "toolbar": true,
     "frame": true,
-    "width": 1180,
+    "width": 1280,
     "min-width": 960,
-    "height": 760,
+    "height": 790,
     "min-height": 480
   },
   "dependencies": {

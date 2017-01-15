@@ -5,13 +5,16 @@
   "scripts": {
     "all": "npm run jshint && npm run webpack && npm run pug && npm run theme && npm run less && npm run build",
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --inline --hot",
+    "babel": "cross-env NODE_ENV=production babel ./src/js/backend --out-dir ./dist",
     "webpack": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "jshint": "cross-env NODE_ENV=production jshint --reporter=./node_modules/jshint-stylish ./src || true",
     "pug": "cross-env NODE_ENV=production pug -o ./dist ./src/pug/index.pug",
     "theme": "cross-env NODE_ENV=production et -c src/less/variables.css -o dist/theme/",
     "less": "cross-env NODE_ENV=production lessc ./src/less/main.less ./dist/main.css",
-    "debug": "cross-env NODE_ENV=development nwb nwbuild -p osx64 -v 0.19.4-sdk -r -- --remote-debugging-port=9222 ./dist",
-    "build": "cross-env NODE_ENV=production nwb nwbuild --mac-icns ./assets/dd.icns -p osx64 -v 0.19.4 -o ./build ./dist",
+    "debug-osx": "cross-env NODE_ENV=development nwb nwbuild --mac-icns ./dist/assets/dd.icns -p osx64 -v 0.19.4-sdk -r -- --remote-debugging-port=9222 ./dist",
+    "build": " npm run build-mac && npm run build-linux",
+    "build-osx": "cross-env NODE_ENV=production nwb nwbuild --production --side-by-side --mac-icns ./dist/assets/dd.icns -p osx64 -v 0.19.4 -o ./build ./dist",
+    "build-linux": "cross-env NODE_ENV=production nwb nwbuild --production --side-by-side -p linux64 -v 0.19.4 -o ./build ./dist",
     "test": "echo \"Warning: no test specified\" && exit 0"
   },
   "author": "A. Koch",

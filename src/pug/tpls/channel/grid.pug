@@ -1,6 +1,12 @@
 template#dd-channel-grid-tpl
     el-row(:gutter="20", v-if="currentFrame && currentFrame._value")
         el-col(:span="2", v-for="(value, i) in currentFrame._value")
-                el-progress(type="circle", style="width:100%",
-                    :percentage="Math.abs(value) * Math.pow(10,6)",
-                    :show-text="false", :stroke-width="10", :width="86", :status="value < 0 ? undefined : 'exception'")
+            el-progress(type="circle", style="width:100%; float:left;", :percentage="Math.abs(value) * Math.pow(10, 6)",
+                :show-text="false", :stroke-width="10", :width="86", :status="value < 0 ? undefined : 'exception'")
+            div(style="width:100%; float:left; text-align:center; margin: -52px 0 40px -1px;")
+                // TODO: fix this unit mess once and for all...
+                div.mono.text-small
+                    span(:class="value < 0 ? undefined : 'hidden'") -
+                    | {{ Math.abs(value * Math.pow(10, 3)).toFixed(3) }}m{{ dataLayout[i].data.unit.toUpperCase() }}
+                .text-small {{ dataLayout[i].data.label }}
+            .clearfix

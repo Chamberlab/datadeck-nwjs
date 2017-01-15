@@ -6,8 +6,10 @@ const _opts = {
     clockTime: undefined,
     clockMillis: 0,
     fps: 100,
+    skip: 500,
     streamService: undefined,
     lastFrameTime: 0,
+    outputUUID: undefined,
     isPlaying: false
 };
 
@@ -18,17 +20,6 @@ class Transport extends Vue {
         _appRef = app;
 
         _opts.streamService = _appRef.service('datastreams');
-        _opts.streamService.on('dataframe', (frame) => {
-            if (!_opts.isPlaying) {
-                _opts.isPlaying = true;
-            }
-            if (frame._time) {
-                _opts.clockMillis = frame._time._value * 1000;
-            }
-            if (frame._lastFrameTime) {
-                _opts.lastFrameTime = frame._lastFrameTime;
-            }
-        });
         _opts.streamService.on('playbackend', () => {
             _opts.isPlaying = false;
         });
@@ -46,9 +37,9 @@ class Transport extends Vue {
             }
         };
         this.computed = {
-            statusToString: function () {
+            timeToString: function () {
                 let parsed = moment(_opts.clockMillis);
-                return `${parsed.format('HH:mm:ss')}:${('000' + parsed.milliseconds()).slice(-3)} @ ${_opts.fps}fps (last: ~${_opts.lastFrameTime}ms)`;
+                return `${parsed.format('HH:mm:ss')}:${('000' + parsed.milliseconds()).slice(-3)}`;
             }
         };
         this.data = function () {
@@ -59,10 +50,30 @@ class Transport extends Vue {
                 if (!this.channelKey || !this.dataPath) {
                     return;
                 }
-                return _opts.streamService.get(this.channelKey, { query: { dataPath: this.dataPath, fps: _opts.fps } });
+                _opts.streamService.on('dataframe', this.handleDataFrame);
+                return _opts.streamService.get(this.channelKey, { query: { dataPath: this.dataPath, fps: _opts.fps, skip: _opts.skip } })
+                    .then(function (outputUUID) {
+                        _opts.outputUUID = outputUUID;
+                        _opts.isPlaying = true;
+                    });
+            },
+            handleDataFrame: function (frame) {
+                if (frame._time) {
+                    _opts.clockMillis = frame._time._value * 1000;
+                }
+                if (frame._lastFrameTime) {
+                    _opts.lastFrameTime = frame._lastFrameTime;
+                }
             },
             stop: function () {
-                return _opts.streamService.del(this.channelKey);
+                if (_opts.outputUUID) {
+                    _opts.streamService.removeListener('dataframe', this.handleDataFrame);
+                    return _opts.streamService.remove(_opts.outputUUID)
+                        .then(() => {
+                            _opts.outputUUID = undefined;
+                            _opts.isPlaying = false;
+                        });
+                }
             }
         };
     }
