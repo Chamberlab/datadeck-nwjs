@@ -1,7 +1,7 @@
 /* global Vue */
 
 const _opts = {
-    activeName: 'data',
+    activeName: 'spec',
     channelLayout: [],
     dataLayout: undefined,
     channelKey: undefined
@@ -13,7 +13,7 @@ class AppMain extends Vue {
 
         this.template = '#dd-app-main-tpl';
         this.methods = {
-            handleTabs(tab, event) {
+            handleTabs(/* tab, event */) {
                 /* ignored */
             },
             handleDatasetOpen(channelLayout) {
