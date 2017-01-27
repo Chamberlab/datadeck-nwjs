@@ -1,6 +1,6 @@
 {
   "name": "datadeck-nwjs",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "",
   "scripts": {
     "clean": "cross-env trash build dist/node_modules dist/service dist/theme dist/app.js dist/app.js.map dist/server.js dist/index.html dist/main.css",
