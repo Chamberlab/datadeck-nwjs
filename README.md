@@ -1,5 +1,7 @@
 # datadeck
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Chamberlab/datadeck-nwjs.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/Chamberlab/datadeck-nwjs.svg?branch=master)](https://travis-ci.org/Chamberlab/datadeck-nwjs)
 
 Desktop tools for data recording, playback and processing.
