@@ -1,5 +1,6 @@
-import cl from 'chamberlib';
+import cl from 'chamberlib/src/index';
 import through2 from 'through2';
+import Promise from 'bluebird';
 
 class DataStreamService {
     constructor() {
@@ -49,7 +50,7 @@ class DataStreamService {
             });
             _this._valueCount += 1;
 
-            if (_this._valueCount === params.query.skip) {
+            if (_this._valueCount >= params.query.skip) {
                 // TODO: implement a more precise frame timing
                 _this.emitFrame();
                 const timeOut = params.query.fps > 0 ? Math.max(0, 1000 / params.query.fps - _this._lastFrameTime) : 0;
@@ -66,7 +67,7 @@ class DataStreamService {
             _this._lmdbNode.endOutput(_this._outputUUID);
         })
         .once('error', function (err) {
-            console.log("Playback error:", err.message);
+            // TODO: add alert service for errors
             _this.emit('playbackend', err);
         });
 
