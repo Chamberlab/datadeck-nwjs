@@ -2,7 +2,7 @@ import { Line } from 'vue-chartjs';
 import moment from 'moment';
 
 export default Line.extend({
-    props: ["data", "label", "updated"],
+    props: ['data', 'label', 'updated'],
     data: function () {
         const _this = this;
         return {
