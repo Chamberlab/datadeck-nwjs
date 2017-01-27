@@ -7,21 +7,16 @@
     "dist": "cd dist && npm install && cd .. && npm run compile-js && npm run compile-ui",
     "build-osx": "cross-env NODE_ENV=production nwb nwbuild --production --side-by-side --mac-icns ./dist/assets/dd.icns -p osx64 -v 0.19.4 -o ./build ./dist",
     "build-linux": "cross-env NODE_ENV=production nwb nwbuild --production --side-by-side -p linux64 -v 0.19.4 -o ./build ./dist",
-
     "release-linux": "npm run quality && npm run clean && npm run dist && npm run build-linux",
     "release-osx": "npm run quality && npm run clean && npm run dist && npm run build-osx",
-
     "debug-osx": "cross-env NODE_ENV=development nwb nwbuild --mac-icns ./dist/assets/dd.icns -p osx64 -v 0.19.4-sdk -r -- --remote-debugging-port=9222 ./dist",
     "test": "echo \"Warning: no test specified\" && exit 0",
-
     "jshint": "cross-env NODE_ENV=production jshint --reporter=./node_modules/jshint-stylish ./src",
     "eslint": "cross-env eslint ./src",
     "quality": "npm run jshint && npm run eslint",
-
     "babel": "cross-env NODE_ENV=production babel ./src/js/backend --out-dir ./dist",
     "webpack": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "compile-js": "npm run babel && npm run webpack",
-
     "pug": "cross-env NODE_ENV=production pug -o ./dist ./src/pug/index.pug",
     "theme": "cross-env NODE_ENV=production et -c src/less/variables.css -o dist/theme/",
     "less": "cross-env NODE_ENV=production lessc ./src/less/main.less ./dist/main.css",
@@ -30,6 +25,7 @@
   "author": "A. Koch",
   "license": "MIT",
   "devDependencies": {
+    "babel-cli": "^6.22.2",
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",
     "babel-plugin-transform-class-properties": "^6.19.0",
@@ -38,7 +34,6 @@
     "babel-preset-stage-0": "^6.16.0",
     "cross-env": "^3.0.0",
     "css-loader": "^0.26.1",
-    "del-cli": "^0.2.1",
     "element-theme": "^0.5.0",
     "element-theme-default": "git+https://github.com/ElementUI/theme-default.git",
     "eslint": "^3.14.1",
