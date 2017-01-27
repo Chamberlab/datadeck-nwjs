@@ -18,13 +18,16 @@ class ChannelGrid extends Vue {
                 type: Array
             }
         };
+
         this.data = function () {
             return _opts;
         };
 
         _opts.streamService = _appRef.service('datastreams');
         _opts.streamService.on('dataframe', function (frame) {
-            _opts.currentFrame = frame;
+            if (_appRef.activeName === 'grid') {
+                _opts.currentFrame = frame;
+            }
         });
     }
 }

@@ -1,29 +1,29 @@
 /* global Vue */
 
-const _opts = {
-    activeName: 'data',
-    channelLayout: [],
-    dataLayout: undefined,
-    channelKey: undefined
-};
-
 class AppMain extends Vue {
     constructor() {
         super();
 
+        const _opts = {
+            activeName: 'spec',
+            channelLayout: [],
+            dataLayout: undefined,
+            channelKey: undefined
+        };
+
         this.template = '#dd-app-main-tpl';
         this.methods = {
-            handleTabs(tab, event) {
+            handleTabs(/* tab, event */) {
                 /* ignored */
             },
             handleDatasetOpen(channelLayout) {
-                _opts.channelLayout = channelLayout;
+                this.channelLayout = channelLayout;
             },
             handleDataLayout(dataLayout) {
-                _opts.dataLayout = dataLayout;
+                this.dataLayout = dataLayout;
             },
             handleChannelSelect(channel) {
-                _opts.channelKey = channel.data.uuid || channel.title;
+                this.channelKey = channel.data.uuid || channel.title;
             }
         };
         this.data = function () {

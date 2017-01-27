@@ -5,8 +5,8 @@ let _appRef;
 const _opts = {
     clockTime: undefined,
     clockMillis: 0,
-    fps: 100,
-    skip: 500,
+    fps: 0,
+    skip: 16000,
     streamService: undefined,
     lastFrameTime: 0,
     outputUUID: undefined,
@@ -47,11 +47,21 @@ class Transport extends Vue {
         };
         this.methods = {
             play: function () {
-                if (!this.channelKey || !this.dataPath) {
+                if (!this.channelKey || !this.dataPath || !_opts) {
                     return;
                 }
+                if (!_opts.skip) {
+                    _opts.skip = 0;
+                }
                 _opts.streamService.on('dataframe', this.handleDataFrame);
-                return _opts.streamService.get(this.channelKey, { query: { dataPath: this.dataPath, fps: _opts.fps, skip: _opts.skip } })
+                return _opts.streamService.get(this.channelKey,
+                    {
+                        query: {
+                            dataPath: this.dataPath,
+                            fps: parseInt(_opts.fps) || 0,
+                            skip: parseInt(_opts.skip) || 0
+                        }
+                    })
                     .then(function (outputUUID) {
                         _opts.outputUUID = outputUUID;
                         _opts.isPlaying = true;

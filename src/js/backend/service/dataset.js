@@ -1,4 +1,5 @@
-import cl from 'chamberlib';
+import cl from 'chamberlib/src/index';
+import Promise from 'bluebird';
 
 class DataSetService {
     constructor() {
@@ -14,7 +15,7 @@ class DataSetService {
     }
 
     find(params) {
-        return new Promise((resolve, reject) => {
+        return new Promise(function (resolve, reject) {
             if (this._assureDataSetOpen(params.query.dataPath)) {
                 return resolve(this._lmdbMeta);
             }

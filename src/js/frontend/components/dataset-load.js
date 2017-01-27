@@ -1,7 +1,6 @@
 /* global Vue */
 
 let _appRef;
-
 const _opts = {
     channelLayout: [],
     metaData: null
@@ -10,14 +9,8 @@ const _opts = {
 class DatasetLoad extends Vue {
     constructor(app) {
         super();
-
-        const _this = this;
         _appRef = app;
 
-        this.template = '#dd-load-dataset-tpl';
-        this.methods = {
-            openDataSet: _this.openDataSet
-        };
         this.props = {
             dataPath: {
                 type: String
@@ -26,35 +19,44 @@ class DatasetLoad extends Vue {
         this.data = function () {
             return _opts;
         };
-    }
 
-    openDataSet() {
-        const _this = this,
-            loading = window.ELEMENT.Loading.service({ fullscreen: true }),
-            dsService = _appRef.service('datasets');
-        return dsService.find({ query: { dataPath:  _this.dataPath } })
-            .then(function (metaData) {
-                let channels = [];
-                Object.keys(metaData.DataSet.DataChannels).map((key) => {
-                    channels.push({
-                        title: metaData.DataSet.DataChannels[key].title || key,
-                        data: metaData.DataSet.DataChannels[key]
+        this.template = '#dd-load-dataset-tpl';
+        this.methods = {
+            openDataSet: function () {
+                const _this = this,
+                    loading = this.$loading({
+                        text: 'Opening Dataset...',
+                        fullscreen: true,
+                        lock: true,
+                        body: true
                     });
-                });
-                _opts.channelLayout.push({
-                    title: metaData.DataSet.title,
-                    data: metaData.DataSet,
-                    children: channels
-                });
-                _opts.metaData = metaData;
-                _this.$emit('openset', _opts.channelLayout);
-                loading.close();
-            })
-            .catch((err) => {
-                loading.close();
-                console.log(err);
-                throw err;
-            });
+                return _appRef.service('datasets')
+                    .find({ query: { dataPath:  _this.dataPath } })
+                    .then(function (metaData) {
+                        let channels = [];
+                        Object.keys(metaData.DataSet.DataChannels).map((key) => {
+                            channels.push({
+                                title: metaData.DataSet.DataChannels[key].title || key,
+                                data: metaData.DataSet.DataChannels[key]
+                            });
+                        });
+                        _this.channelLayout.push({
+                            title: metaData.DataSet.title,
+                            data: metaData.DataSet,
+                            children: channels
+                        });
+                        _this.metaData = metaData;
+                        loading.close();
+                        _this.$emit('openset', _this.channelLayout);
+                    })
+                    .catch(function (err) {
+                        setTimeout(function () {
+                            loading.close();
+                        }, 100);
+                        throw new Error(`Error opening dataset: ${err.message}`);
+                    });
+            }
+        };
     }
 }
 
