@@ -1,7 +1,6 @@
 /* global Vue, moment */
 
 let _appRef;
-
 const _opts = {
     clockTime: undefined,
     clockMillis: 0,

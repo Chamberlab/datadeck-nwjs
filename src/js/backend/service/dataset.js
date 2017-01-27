@@ -1,5 +1,4 @@
 import cl from 'chamberlib/src/index';
-import Promise from 'bluebird';
 
 class DataSetService {
     constructor() {

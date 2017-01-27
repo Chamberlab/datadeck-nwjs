@@ -1,6 +1,5 @@
 import cl from 'chamberlib/src/index';
 import through2 from 'through2';
-import Promise from 'bluebird';
 
 class DataStreamService {
     constructor() {

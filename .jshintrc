@@ -1,13 +1,5 @@
 {
-  "undef": true,
-  "unused": true,
-  "predef": [
-    "-Promise"
-  ],
   "esnext": true,
   "node": true,
-  "browser": true,
-  "globals": {
-    "Promise": true
-  }
+  "browser": true
 }
