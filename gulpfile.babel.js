@@ -11,13 +11,12 @@ import less from 'gulp-less';
 import babel from 'gulp-babel';
 import NWB from 'nwjs-builder';
 
-
 //
 //
-// Init dist folder
+// Init build folder
 
 gulp.task('clean', () => {
-    return del(['dist', 'build']);
+    return del(['build', 'dist']);
 });
 
 gulp.task('copy-assets', cb => {
@@ -25,13 +24,13 @@ gulp.task('copy-assets', cb => {
         'src/assets/**/*',
         'package.json'
     ])
-    .pipe(copy('dist/', { prefix: 1 })).on('close', cb);
+    .pipe(copy('build/', { prefix: 1 })).on('close', cb);
 });
 
 gulp.task('build-theme', cb => {
     return et.run({
         config: 'src/vue-ui/element-variables.css',
-        out: 'dist/theme',
+        out: 'build/theme',
         minimize: false
     }, cb);
 });
@@ -58,12 +57,12 @@ gulp.task('ui-js', cb => {
 
 gulp.task('ui-html', cb => {
     return gulp.src('src/vue-ui/index.pug').pipe(pug())
-        .pipe(gulp.dest('dist/')).on('close', cb);
+        .pipe(gulp.dest('build/')).on('close', cb);
 });
 
 gulp.task('ui-css', cb => {
     return gulp.src('src/vue-ui/element-ui.less').pipe(less())
-        .pipe(gulp.dest('dist/')).on('close', cb);
+        .pipe(gulp.dest('build/')).on('close', cb);
 });
 
 gulp.task('server-js', cb => {
@@ -77,7 +76,7 @@ gulp.task('server-js', cb => {
                 'transform-runtime'
             ],
             sourceMap: 'both'
-        })).pipe(gulp.dest('dist/')).on('close', cb);
+        })).pipe(gulp.dest('build/')).on('close', cb);
 });
 
 
@@ -87,11 +86,11 @@ gulp.task('server-js', cb => {
 
 const nwjsOpts = {
     version: '0.19.4',
-    outputDir: 'build/',
+    outputDir: 'dist/',
     executableName: 'DataDeck',
     withFFmpeg: false,
     sideBySide: true,
-    macIcns: 'dist/assets/dd.icns',
+    macIcns: 'build/assets/dd.icns',
     production: true
 };
 
@@ -101,26 +100,26 @@ const nwjsOptsDebug = Object.assign({
 nwjsOptsDebug.version = `${nwjsOpts.version}-sdk`;
 nwjsOptsDebug.production = false;
 
-gulp.task('build-osx', cb => {
-    NWB.commands.nwbuild('dist', Object.assign({
+gulp.task('release-osx', cb => {
+    NWB.commands.nwbuild('build', Object.assign({
         platforms: 'osx64'
     }, nwjsOpts), cb);
 });
 
-gulp.task('build-linux', cb => {
-    NWB.commands.nwbuild('dist', Object.assign({
+gulp.task('release-linux', cb => {
+    NWB.commands.nwbuild('build', Object.assign({
         platforms: 'linux64'
     }, nwjsOpts), cb);
 });
 
 gulp.task('debug-osx', cb => {
-    NWB.commands.nwbuild(['--remote-debugging-port=9222', 'dist/'], Object.assign({
+    NWB.commands.nwbuild(['--remote-debugging-port=9222', 'build/'], Object.assign({
         platforms: 'osx64'
     }, nwjsOptsDebug), cb);
 });
 
 gulp.task('debug-linux', cb => {
-    NWB.commands.nwbuild(['--remote-debugging-port=9222', 'dist/'], Object.assign({
+    NWB.commands.nwbuild(['--remote-debugging-port=9222', 'build/'], Object.assign({
         platforms: 'linux64'
     }, nwjsOptsDebug), cb);
 });
@@ -130,8 +129,8 @@ gulp.task('debug-linux', cb => {
 //
 // Combined tasks
 
-gulp.task('prebuild', cb => {
+gulp.task('build', cb => {
     return sequence('eslint', ['copy-assets', 'build-theme'], ['server-js', 'ui-js'], ['ui-css', 'ui-html'], cb);
 });
 
-gulp.task('default', ['prebuild']);
+gulp.task('default', ['build']);

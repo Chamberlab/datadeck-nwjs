@@ -7,5 +7,5 @@ before_script:
   - npm install -g gulp
 script:
   - npm test
-  - gulp
-  - gulp build-linux
+  - gulp build
+  - gulp release-linux

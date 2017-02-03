@@ -4,7 +4,7 @@ import io from 'socket.io-client';
 import socketio from 'feathers-socketio/client';
 import Vue from 'vue';
 import ElementUI from 'element-ui';
-import '../../dist/theme/index.css';
+import '../../build/theme/index.css';
 
 Vue.use(ElementUI);
 

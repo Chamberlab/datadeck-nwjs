@@ -4,7 +4,7 @@ const path = require('path'),
 module.exports = {
     entry: './src/vue-ui/vue-ui.js',
     output: {
-        path: path.resolve(__dirname, './dist'),
+        path: path.resolve(__dirname, './build'),
         publicPath: './',
         filename: 'vue-ui.js'
     },
