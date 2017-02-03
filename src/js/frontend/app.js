@@ -1,4 +1,14 @@
-/* global Vue, feathers, io */
+import feathers from 'feathers/client';
+import hooks from 'feathers-hooks';
+import io from 'socket.io-client';
+import socketio from 'feathers-socketio/client';
+
+
+import Vue from 'vue';
+import ElementUI from 'element-ui';
+import '../../../dist/theme/index.css';
+
+Vue.use(ElementUI);
 
 import Channel from './components/channel';
 import LoadDataset from './components/dataset-load';
@@ -8,10 +18,10 @@ import AppMain from './components/app-main';
 
 const socket = io('http://localhost:8787'),
     app = feathers()
-        .configure(feathers.hooks())
-        .configure(feathers.socketio(socket));
+        .configure(hooks())
+        .configure(socketio(socket));
 
-Vue.component('dd-channel-menu', new Channel.Menu(app));
+Vue.component('dd-channel-menu', Channel.Menu);
 Vue.component('dd-channel-list', new Channel.List(app));
 Vue.component('dd-channel-grid', new Channel.Grid(app));
 Vue.component('dd-channel-specs', new Channel.Specs());

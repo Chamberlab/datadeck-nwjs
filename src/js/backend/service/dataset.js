@@ -1,4 +1,4 @@
-import cl from 'chamberlib/src/index';
+import cl from 'chamberlib';
 
 class DataSetService {
     constructor() {
@@ -14,9 +14,10 @@ class DataSetService {
     }
 
     find(params) {
+        const _this = this;
         return new Promise(function (resolve, reject) {
-            if (this._assureDataSetOpen(params.query.dataPath)) {
-                return resolve(this._lmdbMeta);
+            if (_this._assureDataSetOpen(params.query.dataPath)) {
+                return resolve(_this._lmdbMeta);
             }
             reject();
         });

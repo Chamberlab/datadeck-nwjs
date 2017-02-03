@@ -2,8 +2,5 @@
 .DS_Store
 *.log
 node_modules
-dist/**/*
-!dist/package.json
-!dist/assets
-!dist/assets/*
-build
+dist/
+build/

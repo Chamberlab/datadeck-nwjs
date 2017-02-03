@@ -1,4 +1,4 @@
-/* global Vue */
+import Vue from 'vue';
 
 let _appRef;
 const _opts = {

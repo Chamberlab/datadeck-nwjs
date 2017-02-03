@@ -5,7 +5,7 @@ module.exports = {
     entry: './src/js/frontend/app.js',
     output: {
         path: path.resolve(__dirname, './dist'),
-        publicPath: '/dist/',
+        publicPath: './',
         filename: 'app.js'
     },
     module: {
@@ -25,9 +25,17 @@ module.exports = {
                 }
             },
             {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader'
+            },
+            {
                 test: /\.js$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/
+            },
+            {
+                test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
+                loader: 'file-loader'
             },
             {
                 test: /\.(png|jpg|gif|svg)$/,

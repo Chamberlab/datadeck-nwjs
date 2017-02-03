@@ -1,6 +1,6 @@
-/* global Vue */
+import Vue from 'vue';
 
-export default Vue.extend({
+const ChannelMenu = Vue.extend({
     template: '#dd-channel-menu-tpl',
     props: {
         channelLayout: {
@@ -65,3 +65,5 @@ export default Vue.extend({
         }
     }
 });
+
+export default ChannelMenu;

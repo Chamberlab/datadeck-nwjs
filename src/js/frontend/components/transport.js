@@ -1,4 +1,5 @@
-/* global Vue, moment */
+import Vue from 'vue';
+import moment from 'moment';
 
 let _appRef;
 const _opts = {

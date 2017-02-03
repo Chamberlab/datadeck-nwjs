@@ -1,4 +1,4 @@
-import cl from 'chamberlib/src/index';
+import cl from 'chamberlib';
 import through2 from 'through2';
 
 class DataStreamService {
