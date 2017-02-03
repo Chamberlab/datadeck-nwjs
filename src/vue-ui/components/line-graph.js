@@ -1,3 +1,5 @@
+import Chart from 'chart.js';
+import SVGCanvas from 'svgcanvas';
 import { Line } from 'vue-chartjs';
 import moment from 'moment';
 
@@ -5,7 +7,13 @@ export default Line.extend({
     props: ['data', 'label', 'updated'],
     data: function () {
         const _this = this;
+        const svgCanvas = new SVGCanvas();
+        svgCanvas.width = 2000;
+        svgCanvas.height = 100;
         return {
+            svgContext: svgCanvas,
+            makeSVG: false,
+            chartSVG: undefined,
             chartConfig: {
                 responsive: false,
                 maintainAspectRatio: false,
@@ -58,14 +66,32 @@ export default Line.extend({
                         }
                     }]
                 }
-            }
+            },
         };
     },
-    mounted () {
+    methods: {
+        generateSVG: (ctx, data, config) => {
+            new Chart(ctx.getContext('2d'), {
+                type: 'line',
+                data: data,
+                options: config
+            });
+            // TODO: revoke data url (URL.revokeObjectURL)
+            return ctx.toDataURL();
+        }
+    },
+    mounted() {
         const _this = this,
             _renderAll = function () {
                 if (_this.data && _this.data.updated) {
                     _this.renderChart(_this.data.chartData, _this.chartConfig);
+                    _this.makeSVG = true;
+                    _this.data.updated = false;
+                } else {
+                    if (_this.makeSVG) {
+                        _this.data.chartSVG = _this.generateSVG(_this.svgContext, _this.data.chartData, _this.chartConfig);
+                        _this.makeSVG = false;
+                    }
                 }
             };
         _renderAll();

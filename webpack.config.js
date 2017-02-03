@@ -1,5 +1,6 @@
 const path = require('path'),
-    webpack = require('webpack');
+    webpack = require('webpack'),
+    nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     entry: './src/vue-ui/vue-ui.js',
@@ -8,6 +9,10 @@ module.exports = {
         publicPath: './',
         filename: 'vue-ui.js'
     },
+    target: 'node',
+    externals: [nodeExternals({
+        whitelist: ['vue']
+    })],
     module: {
         rules: [
             {

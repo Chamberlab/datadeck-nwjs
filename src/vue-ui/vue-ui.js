@@ -6,13 +6,24 @@ import Vue from 'vue';
 import ElementUI from 'element-ui';
 import '../../build/theme/index.css';
 
-Vue.use(ElementUI);
-
 import Channel from './components/channel';
 import LoadDataset from './components/dataset-load';
 import LineGraph from './components/line-graph';
 import Transport from './components/transport';
 import AppMain from './components/app-main';
+
+Vue.use(ElementUI);
+
+// TODO: run server in a separate thread
+/*
+const feathersServer = new Worker('feathers-server.js');
+feathersServer.onmessage = function(evt) {
+    console.log(`Message from feathers worker: ${evt.data}`);
+};
+feathersServer.onerror = function(err) {
+    console.log(`Feathers Server Error: ${err.message} File: ${err.filename} Line: ${err.lineno}`);
+};
+*/
 
 const socket = io('http://localhost:8787'),
     app = feathers()

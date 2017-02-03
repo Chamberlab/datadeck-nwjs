@@ -1,9 +1,8 @@
 import gulp from 'gulp';
 import { spawn } from 'child_process';
 import sequence from 'run-sequence';
-import copy from 'gulp-copy';
 import del from 'del';
-
+import copy from 'gulp-copy';
 import eslint from 'gulp-eslint';
 import pug from 'gulp-pug';
 import et from 'element-theme';
@@ -19,7 +18,7 @@ gulp.task('clean', () => {
     return del(['build', 'dist']);
 });
 
-gulp.task('copy-assets', cb => {
+gulp.task('copy', cb => {
     return gulp.src([
         'src/assets/**/*',
         'package.json'
@@ -100,28 +99,48 @@ const nwjsOptsDebug = Object.assign({
 nwjsOptsDebug.version = `${nwjsOpts.version}-sdk`;
 nwjsOptsDebug.production = false;
 
-gulp.task('release-osx', cb => {
+gulp.task('release-osx', ['release'], cb => {
     NWB.commands.nwbuild('build', Object.assign({
         platforms: 'osx64'
     }, nwjsOpts), cb);
 });
 
-gulp.task('release-linux', cb => {
+gulp.task('release-linux', ['release'], cb => {
     NWB.commands.nwbuild('build', Object.assign({
         platforms: 'linux64'
     }, nwjsOpts), cb);
 });
 
-gulp.task('debug-osx', cb => {
+gulp.task('debug-osx', ['copy'], cb => {
     NWB.commands.nwbuild(['--remote-debugging-port=9222', 'build/'], Object.assign({
         platforms: 'osx64'
     }, nwjsOptsDebug), cb);
 });
 
-gulp.task('debug-linux', cb => {
+gulp.task('debug-linux', ['copy'], cb => {
     NWB.commands.nwbuild(['--remote-debugging-port=9222', 'build/'], Object.assign({
         platforms: 'linux64'
     }, nwjsOptsDebug), cb);
+});
+
+//
+//
+// Watch tasks
+
+gulp.task('watch-ui-js', cb => {
+    return spawn('npm', ['run', 'webpack-watch'], {
+        stdio: [0, process.stdout, process.stderr]
+    }).on('close', cb);
+});
+
+gulp.task('watch-server-js', () => {
+    gulp.watch('src/feathers-server/**/*.js', ['server-js']);
+});
+
+gulp.task('watch-ui', () => {
+    gulp.watch('src/vue-ui/**/*.pug', ['ui-html']);
+    gulp.watch('src/vue-ui/element.variables.css', ['build-theme']);
+    gulp.watch('src/vue-ui/element-ui.less', ['ui-css']);
 });
 
 
@@ -129,8 +148,14 @@ gulp.task('debug-linux', cb => {
 //
 // Combined tasks
 
-gulp.task('build', cb => {
-    return sequence('eslint', ['copy-assets', 'build-theme'], ['server-js', 'ui-js'], ['ui-css', 'ui-html'], cb);
+gulp.task('release', cb => {
+    return sequence('eslint', 'clean', 'build', cb);
 });
+
+gulp.task('build', cb => {
+    return sequence(['copy', 'build-theme'], ['server-js', 'ui-js', 'ui-css', 'ui-html'], cb);
+});
+
+gulp.task('dev', ['watch-ui-js', 'watch-ui', 'watch-server-js']);
 
 gulp.task('default', ['build']);
