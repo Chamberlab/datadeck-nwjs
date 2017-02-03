@@ -1,5 +1,5 @@
 {
     "format": "compact",
     "quiet": true,
-    "exclude-list": "src/less/variables.css,build/,node_modules/,dist/"
+    "exclude-list": "src/vue-ui/element-variables.css,build/,node_modules/,dist/"
 }

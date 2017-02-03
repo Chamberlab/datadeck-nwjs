@@ -2,11 +2,11 @@ const path = require('path'),
     webpack = require('webpack');
 
 module.exports = {
-    entry: './src/js/frontend/app.js',
+    entry: './src/vue-ui/vue-ui.js',
     output: {
         path: path.resolve(__dirname, './dist'),
         publicPath: './',
-        filename: 'app.js'
+        filename: 'vue-ui.js'
     },
     module: {
         rules: [

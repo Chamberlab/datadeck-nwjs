@@ -1,0 +1,15 @@
+doctype html
+html
+    head
+        title datadeck
+        link(rel='stylesheet', href='element-ui.css', media='all')
+    body
+        dd-app-main#datadeck
+
+        include components/channel/index
+        include components/dataset-load
+        include components/transport
+        include components/app-main
+
+        script(src='http://localhost:8787/socket.io/socket.io.js')
+        script(src='vue-ui.js')
