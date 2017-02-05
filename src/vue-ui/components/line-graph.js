@@ -1,4 +1,3 @@
-import Chart from 'chart.js';
 import SVGCanvas from 'svgcanvas';
 import { Line } from 'vue-chartjs';
 import moment from 'moment';
@@ -69,17 +68,6 @@ export default Line.extend({
             },
         };
     },
-    methods: {
-        generateSVG: (ctx, data, config) => {
-            new Chart(ctx.getContext('2d'), {
-                type: 'line',
-                data: data,
-                options: config
-            });
-            // TODO: revoke data url (URL.revokeObjectURL)
-            return ctx.toDataURL();
-        }
-    },
     mounted() {
         const _this = this,
             _renderAll = function () {
@@ -89,8 +77,11 @@ export default Line.extend({
                     _this.data.updated = false;
                 } else {
                     if (_this.makeSVG) {
-                        _this.data.chartSVG = _this.generateSVG(_this.svgContext, _this.data.chartData, _this.chartConfig);
                         _this.makeSVG = false;
+                        _this._chart.chart.ctx = _this.svgContext.getContext('2d');
+                        _this.renderChart(_this.data.chartData, _this.chartConfig);
+                        _this.data.chartSVG = _this.chart.toBase64Image(); //_this.svgContext.toDataURL('svg+xml');
+                        _this.data.svgCallback(_this.data.chartSVG);
                     }
                 }
             };

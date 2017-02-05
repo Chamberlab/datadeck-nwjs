@@ -6,7 +6,8 @@ const _opts = {
     scrollFrameHeight: window.innerHeight - 200,
     graphWidth: window.innerWidth - 40,
     graphHeight: 0,
-    dataBuffer: []
+    dataBuffer: [],
+    svg: undefined
 };
 
 class ChannelPlot extends Vue {
@@ -31,7 +32,10 @@ class ChannelPlot extends Vue {
                             data: []
                         }]
                     },
-                    updated: false
+                    updated: false,
+                    svgCallback: function (url) {
+                        _opts.svg = url;
+                    }
                 };
             });
             return _opts;

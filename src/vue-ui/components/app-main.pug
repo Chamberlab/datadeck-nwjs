@@ -1,8 +1,7 @@
 template#dd-app-main-tpl
     el-row(:gutter="20")
         el-col(:span="24")
-            dd-load-dataset(v-on:openset='handleDatasetOpen',
-                data-path='/Users/anton/WebstormProjects/node-chamberlib/data/lmdb/20151208_15h59m12s_nanobrain')
+            dd-load-dataset(v-on:openset='handleDatasetOpen')
             dd-channel-menu(:channel-layout='channelLayout',
                 v-on:datalayout='handleDataLayout', v-on:channelselect='handleChannelSelect')
 

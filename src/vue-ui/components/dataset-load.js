@@ -3,7 +3,9 @@ import Vue from 'vue';
 let _appRef;
 const _opts = {
     channelLayout: [],
-    metaData: null
+    metaData: null,
+    datasetFiles: undefined,
+    dataPath: undefined
 };
 
 class DatasetLoad extends Vue {
@@ -11,17 +13,23 @@ class DatasetLoad extends Vue {
         super();
         _appRef = app;
 
-        this.props = {
-            dataPath: {
-                type: String
-            }
-        };
         this.data = function () {
             return _opts;
         };
 
         this.template = '#dd-load-dataset-tpl';
         this.methods = {
+            datasetChooser(e) {
+                e.preventDefault();
+                document.querySelector('#dataset-chooser').click();
+            },
+            updateDataset(e) {
+                e.preventDefault();
+                const files = e.target.files;
+                if (files.length > 0) {
+                    this.dataPath = files[0].path;
+                }
+            },
             openDataSet: function () {
                 const _this = this,
                     loading = this.$loading({

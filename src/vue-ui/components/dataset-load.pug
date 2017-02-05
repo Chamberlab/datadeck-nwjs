@@ -1,4 +1,7 @@
 template#dd-load-dataset-tpl
     el-card(v-if='!metaData')
-        el-input(placeholder='Enter data path...', v-model='dataPath')
-            el-button(@click="openDataSet", slot="append") Open
+        el-input(placeholder='Enter Dataset path', v-model='dataPath')
+            el-button(@click="datasetChooser", slot="append", v-if="!dataPath") Select directory
+            el-button(@click="openDataSet", slot="append", v-if="dataPath") Open
+        input.nodisplay#dataset-chooser(type="file", nwdirectory,
+            name="dataset", v-on:change="updateDataset")
