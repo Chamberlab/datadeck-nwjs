@@ -78,10 +78,10 @@ class Transport extends Vue {
             stop: function () {
                 if (_opts.outputUUID) {
                     _opts.streamService.removeListener('dataframe', this.handleDataFrame);
+                    _opts.isPlaying = false;
                     return _opts.streamService.remove(_opts.outputUUID)
                         .then(() => {
                             _opts.outputUUID = undefined;
-                            _opts.isPlaying = false;
                         });
                 }
             }

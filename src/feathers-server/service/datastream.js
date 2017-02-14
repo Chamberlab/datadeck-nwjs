@@ -93,6 +93,7 @@ class DataStreamService {
         if (this._lmdbNode) {
             this._lmdbNode.endOutput(outputUUID);
             this._outputUUID = undefined;
+            this.emit('playbackend');
         }
         return Promise.resolve();
     }
