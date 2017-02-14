@@ -79,28 +79,37 @@ export default Line.extend({
         };
     },
     mounted() {
+        let isUpdating = false, timeout = null;
         const _this = this,
             _renderAll = function () {
-                if (_this.data && _this.data.updated) {
-                    _this.renderChart(_this.data.chartData, _this.chartConfig);
-                    _this.makeSVG = true;
-                    _this.data.updated = false;
-                } else {
-                    if (_this.makeSVG) {
-                        _this.makeSVG = false;
-                        _this._chart.chart.ctx = _this.svgContext.getContext('2d');
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
+                if (!isUpdating) {
+                    isUpdating = true;
+                    if (_this.data && _this.data.updated) {
                         _this.renderChart(_this.data.chartData, _this.chartConfig);
-                        _this.data.chartSVG = _this.svgContext.toDataURL('image/svg+xml');
-                        _this.data.svgCallback(_this.data.chartSVG);
+                        _this.makeSVG = true;
+                        _this.data.updated = false;
+                    } else {
+                        if (_this.makeSVG) {
+                            _this.makeSVG = false;
+                            _this._chart.chart.ctx = _this.svgContext.getContext('2d');
+                            _this.renderChart(_this.data.chartData, _this.chartConfig);
+                            _this.data.chartSVG = _this.svgContext.toDataURL('image/svg+xml');
+                            _this.data.svgCallback(_this.data.chartSVG);
+                        }
                     }
                 }
+                isUpdating = false;
+                timeout = setTimeout(function () {
+                    _renderAll();
+                }, 2000);
             };
         window.addEventListener('resize', function() {
             _this.data.updated = true;
         });
+        _this.data.updated = true;
         _renderAll();
-        setInterval(function () {
-            _renderAll();
-        }, 2000);
     }
 });
