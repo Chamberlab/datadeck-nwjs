@@ -7,7 +7,9 @@ const _opts = {
     graphWidth: window.innerWidth - 40,
     graphHeight: 0,
     dataBuffer: [],
-    svg: undefined
+    svg: undefined,
+    yMin: undefined,
+    yMax: undefined
 };
 
 class ChannelPlot extends Vue {
@@ -20,10 +22,14 @@ class ChannelPlot extends Vue {
         this.props = {
             dataLayout: {
                 type: Array
+            },
+            scaleGlobal: {
+                type: Boolean
             }
         };
         this.data = function () {
             _opts.graphHeight = this.dataLayout.length <= 16 ? 400 : 200;
+            _opts.yMin = _opts.yMax = this.scaleGlobal ? 0 : undefined;
             _opts.dataBuffer = new Array(this.dataLayout.length).fill(0).map(() => {
                 return {
                     chartData: {
@@ -58,7 +64,12 @@ class ChannelPlot extends Vue {
             for (let i in frame._value) {
                 const bufferObj = _opts.dataBuffer[i];
                 if (bufferObj.chartData.datasets.length > 0) {
-                    bufferObj.chartData.datasets[0].data.push(frame._value[i] * Math.pow(10, 6));
+                    let val = frame._value[i] * Math.pow(10, 6);
+                    if (_opts.yMax && !Math.abs(val) > _opts.yMax) {
+                        _opts.yMax = Math.abs(val);
+                        _opts.yMin = _opts.yMax * -1.0;
+                    }
+                    bufferObj.chartData.datasets[0].data.push(val);
                     bufferObj.chartData.labels.push(frame._time._value);
                     bufferObj.updated = true;
                 }
