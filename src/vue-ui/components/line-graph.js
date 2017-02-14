@@ -3,7 +3,7 @@ import { Line } from 'vue-chartjs';
 import moment from 'moment';
 
 export default Line.extend({
-    props: ['data', 'label', 'updated'],
+    props: ['data', 'label', 'updated', 'max', 'min'],
     data: function () {
         const _this = this;
         const svgCanvas = new SVGCanvas();
@@ -44,6 +44,9 @@ export default Line.extend({
                 scales: {
                     xAxes: [{
                         type: 'time',
+                        gridLines:{
+                            display: true
+                        },
                         time: {
                             displayFormats: {
                                 second: 'hh:mm:ss'
@@ -60,8 +63,15 @@ export default Line.extend({
                     }],
                     yAxes: [{
                         label: 'mV',
+                        gridLines:{
+                            display: true
+                        },
                         ticks: {
-                            maxTicksLimit: 10
+                            min: _this.min,
+                            max: _this.max,
+                            stepSize: _this.max ? _this.max * 2 / 10 : 0.1,
+                            maxTicksLimit: 10,
+                            beginAtZero: false
                         }
                     }]
                 }
@@ -80,11 +90,14 @@ export default Line.extend({
                         _this.makeSVG = false;
                         _this._chart.chart.ctx = _this.svgContext.getContext('2d');
                         _this.renderChart(_this.data.chartData, _this.chartConfig);
-                        _this.data.chartSVG = _this.chart.toBase64Image(); //_this.svgContext.toDataURL('svg+xml');
+                        _this.data.chartSVG = _this.svgContext.toDataURL('image/svg+xml');
                         _this.data.svgCallback(_this.data.chartSVG);
                     }
                 }
             };
+        window.addEventListener('resize', function() {
+            _this.data.updated = true;
+        });
         _renderAll();
         setInterval(function () {
             _renderAll();

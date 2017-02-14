@@ -6,7 +6,7 @@ const _opts = {
     clockTime: undefined,
     clockMillis: 0,
     fps: 0,
-    skip: 16000,
+    skip: 0,
     streamService: undefined,
     lastFrameTime: 0,
     outputUUID: undefined,

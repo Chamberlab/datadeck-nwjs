@@ -8,7 +8,8 @@ class AppMain extends Vue {
             activeName: 'spec',
             channelLayout: [],
             dataLayout: undefined,
-            channelKey: undefined
+            channelKey: undefined,
+            scaleGlobal: true
         };
 
         this.template = '#dd-app-main-tpl';
