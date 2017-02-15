@@ -1,13 +1,13 @@
 template#dd-app-main-tpl
     el-row(:gutter="20")
         el-col(:span="24")
-            dd-load-dataset(v-on:openset='handleDatasetOpen')
+            dd-load-dataset(@openset='handleDatasetOpen')
             dd-channel-menu(:channel-layout='channelLayout',
-                v-on:datalayout='handleDataLayout', v-on:channelselect='handleChannelSelect')
+                @datalayout='handleDataLayout', @channelselect='handleChannelSelect')
 
         el-col(:span="24")
-            dd-transport(v-if='dataLayout', :data-layout='dataLayout', :channel-key='channelKey',
-                data-path='/Users/anton/WebstormProjects/node-chamberlib/data/lmdb/20151208_15h59m12s_nanobrain')
+            dd-transport(v-if='dataLayout', :data-layout='dataLayout',
+                :channel-key='channelKey', :data-path='dataPath')
 
         el-col(:span="24", v-if='dataLayout')
             el-tabs(v-model="activeName")
@@ -15,13 +15,19 @@ template#dd-app-main-tpl
                     dd-channel-specs(:data-layout='dataLayout')
                 el-tab-pane(label="Plot", name="plot")
                     el-row.plot-options(:gutter="20")
+                        el-col(:span="4")
+                            el-checkbox(v-model="autoUpdate", :true-value="2000") Auto Update Graphs
+                        el-col(:span="4")
+                            el-checkbox(v-model="scaleGlobal") Global Y-Axis scale
+                        el-col(:span="2", :offset="11")
+                            el-button(@click="manualUpdate()", v-if="!autoUpdate",
+                                size="mini", type="info") Render Update
                         el-col(:span="2")
                             el-button(@click="screenshot()", size="mini", type="info") PNG Snapshot
-                        el-col(:span="2")
-                            el-checkbox(v-model="scaleGlobal") Global Y-Axis scale
                     el-row(:gutter="20")
                         el-col(:span="24")
-                            dd-channel-plot(:data-layout='dataLayout', :scale-global="scaleGlobal")
+                            dd-channel-plot(:data-layout='dataLayout',
+                                :scale-global="scaleGlobal", :auto-update="autoUpdate")
                 el-tab-pane(label="Grid", name="grid")
                     dd-channel-grid(:data-layout='dataLayout')
                 el-tab-pane(label="List", name="list")

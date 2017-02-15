@@ -43,6 +43,9 @@ Vue.component('dd-line-graph', LineGraph);
 Vue.component('dd-transport', new Transport(app));
 Vue.component('dd-app-main', new AppMain());
 
+window.eventBus = new Vue();
+
+
 new Vue({
     el: '#datadeck'
 });

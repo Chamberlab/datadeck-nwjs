@@ -55,7 +55,7 @@ class DatasetLoad extends Vue {
                         });
                         _this.metaData = metaData;
                         loading.close();
-                        _this.$emit('openset', _this.channelLayout);
+                        _this.$emit('openset', { channelLayout: _this.channelLayout, dataPath: _this.dataPath });
                     })
                     .catch(function (err) {
                         setTimeout(function () {

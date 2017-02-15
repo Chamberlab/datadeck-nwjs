@@ -1,7 +1,8 @@
 template#dd-channel-plot-tpl
-    div(:style="'overflow:scroll;height:' + scrollFrameHeight + 'px;'")
-        div(v-for="(channel, i) in dataLayout")
-            el-row(:gutter="20", style="margin-bottom: 10px;")
-                el-col(:span="24")
-                    dd-line-graph(:data="dataBuffer[i]", :label="channel.data.label",
-                        :width="graphWidth", :height="graphHeight", :ymin="yMin", :ymax="yMax")
+    div#scroll-box(:style="'overflow:scroll;height:' + scrollFrameHeight + 'px;'")
+        .wrapper#plot-wrapper
+            div(v-for="(channel, i) in dataLayout")
+                el-row(:gutter="20", style="margin-bottom: 10px;")
+                    el-col(:span="24")
+                        dd-line-graph(:data="dataBuffer[i]", :label="channel.data.label", :auto-update="autoUpdate",
+                            :width="graphWidth", :height="graphHeight", :ymin="yMin", :ymax="yMax")

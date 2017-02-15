@@ -14,14 +14,18 @@ class ChannelPlot extends Vue {
             graphWidth: 0,
             graphHeight: 0,
             dataBuffer: [],
+            autoUpdate: undefined,
             debounce: undefined,
             yMin: undefined,
             yMax: undefined
         };
 
         this.template = '#dd-channel-plot-tpl';
-        this.props = ['dataLayout', 'scaleGlobal'];
+        this.props = ['dataLayout', 'scaleGlobal', 'autoUpdate'];
         this.watch = {
+            autoUpdate: function (val) {
+                _opts.autoUpdate = val;
+            },
             scaleGlobal: function (val) {
                 if (val === true) {
                     if (typeof _opts.yMax === 'undefined') {
@@ -37,6 +41,7 @@ class ChannelPlot extends Vue {
         this.data = function () {
             _opts.graphWidth = window.innerWidth - 40;
             _opts.scrollFrameHeight = window.innerHeight - 200;
+            _opts.autoUpdate = this.autoUpdate;
             if (this.scaleGlobal === true) {
                 if (typeof _opts.yMax === 'undefined') {
                     _opts.yMin = 0.0;
@@ -69,7 +74,7 @@ class ChannelPlot extends Vue {
                 _opts.graphWidth = window.innerWidth - 40;
                 _opts.scrollFrameHeight = window.innerHeight - 200;
                 _opts.debounce = undefined;
-            }, 200);
+            }, 100);
         });
 
         this.streamService = _appRefs.get(this).service('datastreams');

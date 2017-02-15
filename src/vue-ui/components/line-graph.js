@@ -4,7 +4,7 @@ import moment from 'moment';
 const _dataRefs = new WeakMap();
 
 export default Line.extend({
-    props: ['data', 'label', 'ymax', 'ymin'],
+    props: ['data', 'label', 'ymax', 'ymin', 'autoUpdate'],
     computed: {
         chartConfig: function () {
             const _conf = {
@@ -80,7 +80,8 @@ export default Line.extend({
             const _opts = {
                 timeout: undefined,
                 isUpdating: false,
-                needsUpdate: false
+                needsUpdate: false,
+                autoUpdate: this.autoUpdate
             };
             _dataRefs.set(this, _opts);
             opts = _dataRefs.get(this);
@@ -90,6 +91,7 @@ export default Line.extend({
     mounted() {
         const _this = this;
         let _debounce;
+
         this.isUpdating = false;
         this.timeout = undefined;
 
@@ -115,10 +117,17 @@ export default Line.extend({
                 _this.data.dirty = false;
                 _this.isUpdating = false;
             }
-            _this.timeout = setTimeout(function () {
-                _renderAll();
-            }, 2000);
+            if (typeof _this.autoUpdate === 'number') {
+                _this.timeout = setTimeout(function () {
+                    _renderAll();
+                }, _this.autoUpdate);
+            }
         };
+
+        window.eventBus.$on('render_plots', function () {
+            _this.needsUpdate = true;
+            _renderAll();
+        });
 
         _renderAll();
     }

@@ -12,6 +12,8 @@ class AppMain extends Vue {
             channelLayout: [],
             dataLayout: undefined,
             channelKey: undefined,
+            dataPath: undefined,
+            autoUpdate: false,
             scaleGlobal: true
         };
 
@@ -20,8 +22,9 @@ class AppMain extends Vue {
             handleTabs(/* tab, event */) {
                 /* ignored */
             },
-            handleDatasetOpen(channelLayout) {
-                this.channelLayout = channelLayout;
+            handleDatasetOpen(data) {
+                this.channelLayout = data.channelLayout;
+                this.dataPath = data.dataPath;
             },
             handleDataLayout(dataLayout) {
                 this.dataLayout = dataLayout;
@@ -30,28 +33,33 @@ class AppMain extends Vue {
                 this.channelKey = channel.data.uuid || channel.title;
             },
             screenshot() {
-                const gui = window.require('nw.gui'),
-                    win = gui.Window.get(),
-                    body = win.window.document.querySelector('body'),
-                    dims = {
-                        width: win.window.outerWidth, height: win.window.outerHeight
-                    };
+                const _this = this,
+                    gui = window.require('nw.gui'), win = gui.Window.get(),
+                    scrollbox = win.window.document.querySelector('#scroll-box'),
+                    wrapper = win.window.document.querySelector('#plot-wrapper');
 
-                win.resizeTo(body.clientWidth, body.clientHeight);
+                win.window.scrollTo(0, 0);
+                scrollbox.scrollTop = 0;
+                scrollbox.scrollLeft = 0;
 
-                setTimeout(() => {
-                    win.capturePage((img) => {
-                        let base64Data = img.replace(/^data:image\/(png|jpg|jpeg);base64,/, ''),
-                            outfile = path.join(gui.App.dataPath, `screenshot-${moment().unix()}.png`);
-                        fs.writeFile(outfile, base64Data, 'base64', (err) => {
-                            if (err) {
-                                alert(`Screenshot error: ${err.message}`);
-                            }
-                            win.resizeTo(dims.width, dims.height);
-                            alert(`Screenshot saved to: ${outfile}`);
+                win.capturePage((buffer) => {
+                    const outfile = path.join(gui.App.dataPath, `screenshot-${moment().unix()}.png`);
+                    fs.writeFile(outfile, buffer, 'binary', (err) => {
+                        if (err) {
+                            _this.$notify.error({
+                                title: 'Screenshot failed',
+                                message: err.message
+                            });
+                        }
+                        _this.$notify.success({
+                            title: 'Screenshot stored',
+                            message: `PNG file saved to: ${outfile}`
                         });
-                    }, 'png');
-                }, 5000);
+                    });
+                }, {format: 'png', datatype: 'buffer'});
+            },
+            manualUpdate() {
+                window.eventBus.$emit('render_plots');
             }
         };
         this.data = function () {

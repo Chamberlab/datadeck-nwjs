@@ -4,4 +4,4 @@ template#dd-load-dataset-tpl
             el-button(@click="datasetChooser", slot="append", v-if="!dataPath") Select directory
             el-button(@click="openDataSet", slot="append", v-if="dataPath") Open
         input.nodisplay#dataset-chooser(type="file", nwdirectory,
-            name="dataset", v-on:change="updateDataset")
+            name="dataset", @change="updateDataset")
