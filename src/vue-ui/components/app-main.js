@@ -35,8 +35,7 @@ class AppMain extends Vue {
             screenshot() {
                 const _this = this,
                     gui = window.require('nw.gui'), win = gui.Window.get(),
-                    scrollbox = win.window.document.querySelector('#scroll-box'),
-                    wrapper = win.window.document.querySelector('#plot-wrapper');
+                    scrollbox = win.window.document.querySelector('#scroll-box');
 
                 win.window.scrollTo(0, 0);
                 scrollbox.scrollTop = 0;
