@@ -12,7 +12,7 @@ module.exports = {
     target: 'node',
     externals: [nodeExternals({
         whitelist: ['vue']
-    })],
+    }), 'nw.gui'],
     module: {
         rules: [
             {
@@ -36,7 +36,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                exclude: /node_modules/
+                exclude: /(node_modules)/
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,

@@ -89,11 +89,17 @@ export default Line.extend({
     },
     mounted() {
         const _this = this;
+        let _debounce;
         this.isUpdating = false;
         this.timeout = undefined;
 
         window.addEventListener('resize', function () {
-            _this.needsUpdate = true;
+            if (_debounce) {
+                clearTimeout(_debounce);
+            }
+            _debounce = setTimeout(() => {
+                _this.needsUpdate = true;
+            }, 100);
         });
 
         const _renderAll = function () {

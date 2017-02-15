@@ -15,7 +15,9 @@ template#dd-app-main-tpl
                     dd-channel-specs(:data-layout='dataLayout')
                 el-tab-pane(label="Plot", name="plot")
                     el-row.plot-options(:gutter="20")
-                        el-col(:span="24")
+                        el-col(:span="2")
+                            el-button(@click="screenshot()", size="mini", type="info") PNG Snapshot
+                        el-col(:span="2")
                             el-checkbox(v-model="scaleGlobal") Global Y-Axis scale
                     el-row(:gutter="20")
                         el-col(:span="24")

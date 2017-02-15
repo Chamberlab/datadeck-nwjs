@@ -9,19 +9,15 @@ class ChannelPlot extends Vue {
         _appRefs.set(this, app);
 
         const _opts = {
-                streamService: undefined,
-                scrollFrameHeight: 0,
-                graphWidth: 0,
-                graphHeight: 0,
-                dataBuffer: [],
-                svg: undefined,
-                debounce: undefined,
-                yMin: undefined,
-                yMax: undefined
-            },
-            _svgCallback = function (url) {
-                this.svg = url;
-            };
+            streamService: undefined,
+            scrollFrameHeight: 0,
+            graphWidth: 0,
+            graphHeight: 0,
+            dataBuffer: [],
+            debounce: undefined,
+            yMin: undefined,
+            yMax: undefined
+        };
 
         this.template = '#dd-channel-plot-tpl';
         this.props = ['dataLayout', 'scaleGlobal'];
@@ -58,8 +54,7 @@ class ChannelPlot extends Vue {
                                 data: []
                             }]
                         },
-                        dirty: false,
-                        svgCallback: _svgCallback
+                        dirty: false
                     });
                 }
             }
