@@ -7,9 +7,10 @@
     "webpack": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "webpack-watch": "cross-env NODE_ENV=production webpack --watch --progress --hide-modules"
   },
-  "js-flags": "--harmony",
+  "js-flags": "--harmony --max_old_space_size=4096",
   "main": "index.html",
-  "chromium-args": "--enable-node-worker",
+  "chromium-args": "--enable-node-worker --memory-pressure-off --enable-native-gpu-memory-buffers --enable-zero-copy",
+  "dom_storage_quota": 256,
   "window": {
     "title": "Chamberlab Datadeck",
     "icon": "assets/icon_256x256.png",

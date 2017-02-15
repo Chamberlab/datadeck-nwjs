@@ -1,19 +1,13 @@
-import SVGCanvas from 'svgcanvas';
 import { Line } from 'vue-chartjs';
 import moment from 'moment';
 
+const _dataRefs = new WeakMap();
+
 export default Line.extend({
-    props: ['data', 'label', 'updated', 'max', 'min'],
-    data: function () {
-        const _this = this;
-        const svgCanvas = new SVGCanvas();
-        svgCanvas.width = 2000;
-        svgCanvas.height = 100;
-        return {
-            svgContext: svgCanvas,
-            makeSVG: false,
-            chartSVG: undefined,
-            chartConfig: {
+    props: ['data', 'label', 'ymax', 'ymin'],
+    computed: {
+        chartConfig: function () {
+            const _conf = {
                 responsive: false,
                 maintainAspectRatio: false,
                 events: [],
@@ -24,19 +18,13 @@ export default Line.extend({
                         borderWidth: 1.0,
                         borderColor: '#000000',
                     },
-                    point: {
-                        radius: 0.0
-                    }
+                    point: false
                 },
-                animation: {
-                    duration: 0
-                },
-                legend: {
-                    display: false
-                },
+                animation: false,
+                legend: false,
                 title: {
                     display: true,
-                    text: _this.label,
+                    text: this.label,
                     fontStyle: 'normal',
                     position: 'left',
                     fontSize: 14
@@ -44,7 +32,7 @@ export default Line.extend({
                 scales: {
                     xAxes: [{
                         type: 'time',
-                        gridLines:{
+                        gridLines: {
                             display: true
                         },
                         time: {
@@ -65,51 +53,67 @@ export default Line.extend({
                         label: 'mV',
                         gridLines:{
                             display: true
-                        },
-                        ticks: {
-                            min: _this.min,
-                            max: _this.max,
-                            stepSize: _this.max ? _this.max * 2 / 10 : 0.1,
-                            maxTicksLimit: 10,
-                            beginAtZero: false
                         }
                     }]
                 }
-            },
-        };
+            };
+            if (typeof this.ymax === 'number') {
+                _conf.scales.yAxes[0].ticks = {
+                    min: this.ymin,
+                    max: this.ymax,
+                    fixedStepSize: typeof this.ymax === 'number' ? Math.abs(this.ymax) * 0.2 : undefined,
+                    beginAtZero: false
+                };
+            } else {
+                _conf.scales.yAxes[0].ticks = {
+                    maxTicksLimit: 10,
+                    stepSize: 0.1,
+                    beginAtZero: false
+                };
+            }
+            return _conf;
+        }
+    },
+    data: function () {
+        let opts = _dataRefs.get(this);
+        if (!opts) {
+            const _opts = {
+                timeout: undefined,
+                isUpdating: false,
+                needsUpdate: false
+            };
+            _dataRefs.set(this, _opts);
+            opts = _dataRefs.get(this);
+        }
+        return opts;
     },
     mounted() {
-        let isUpdating = false, timeout = null;
-        const _this = this,
-            _renderAll = function () {
-                if (timeout) {
-                    clearTimeout(timeout);
-                }
-                if (!isUpdating) {
-                    isUpdating = true;
-                    if (_this.data && _this.data.updated) {
-                        _this.renderChart(_this.data.chartData, _this.chartConfig);
-                        _this.makeSVG = true;
-                        _this.data.updated = false;
-                    } else {
-                        if (_this.makeSVG) {
-                            _this.makeSVG = false;
-                            _this._chart.chart.ctx = _this.svgContext.getContext('2d');
-                            _this.renderChart(_this.data.chartData, _this.chartConfig);
-                            _this.data.chartSVG = _this.svgContext.toDataURL('image/svg+xml');
-                            _this.data.svgCallback(_this.data.chartSVG);
-                        }
-                    }
-                }
-                isUpdating = false;
-                timeout = setTimeout(function () {
-                    _renderAll();
-                }, 2000);
-            };
-        window.addEventListener('resize', function() {
-            _this.data.updated = true;
+        const _this = this;
+        this.isUpdating = false;
+        this.timeout = undefined;
+
+        window.addEventListener('resize', function () {
+            _this.needsUpdate = true;
         });
-        _this.data.updated = true;
+
+        const _renderAll = function () {
+            if (_this.timeout) {
+                clearTimeout(_this.timeout);
+                _this.timeout = undefined;
+            }
+            _this.needsUpdate = _this.needsUpdate || _this.data.dirty;
+            if (!_this.isUpdating && _this.needsUpdate) {
+                _this.isUpdating = true;
+                _this.renderChart(_this.data.chartData, _this.chartConfig);
+                _this.needsUpdate = false;
+                _this.data.dirty = false;
+                _this.isUpdating = false;
+            }
+            _this.timeout = setTimeout(function () {
+                _renderAll();
+            }, 2000);
+        };
+
         _renderAll();
     }
 });

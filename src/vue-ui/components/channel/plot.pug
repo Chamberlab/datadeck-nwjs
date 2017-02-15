@@ -7,4 +7,4 @@ template#dd-channel-plot-tpl
             el-row(:gutter="20", style="margin-bottom: 10px;")
                 el-col(:span="24")
                     dd-line-graph(:data="dataBuffer[i]", :label="channel.data.label",
-                        :width="graphWidth", :height="graphHeight", :min="yMin", :max="yMax")
+                        :width="graphWidth", :height="graphHeight", :ymin="yMin", :ymax="yMax")

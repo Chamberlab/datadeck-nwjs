@@ -1,77 +1,100 @@
 import Vue from 'vue';
 
-let _appRef;
-const _opts = {
-    streamService: undefined,
-    scrollFrameHeight: window.innerHeight - 200,
-    graphWidth: window.innerWidth - 40,
-    graphHeight: 0,
-    dataBuffer: [],
-    svg: undefined,
-    yMin: undefined,
-    yMax: undefined
-};
+const _appRefs = new WeakMap();
 
 class ChannelPlot extends Vue {
     constructor(app) {
         super();
 
-        _appRef = app;
+        _appRefs.set(this, app);
+
+        const _opts = {
+                streamService: undefined,
+                scrollFrameHeight: 0,
+                graphWidth: 0,
+                graphHeight: 0,
+                dataBuffer: [],
+                svg: undefined,
+                debounce: undefined,
+                yMin: undefined,
+                yMax: undefined
+            },
+            _svgCallback = function (url) {
+                this.svg = url;
+            };
 
         this.template = '#dd-channel-plot-tpl';
-        this.props = {
-            dataLayout: {
-                type: Array
-            },
-            scaleGlobal: {
-                type: Boolean
+        this.props = ['dataLayout', 'scaleGlobal'];
+        this.watch = {
+            scaleGlobal: function (val) {
+                if (val === true) {
+                    if (typeof _opts.yMax === 'undefined') {
+                        _opts.yMin = 0.0;
+                        _opts.yMax = 0.0;
+                    }
+                } else {
+                    _opts.yMin = undefined;
+                    _opts.yMax = undefined;
+                }
             }
         };
         this.data = function () {
-            _opts.graphHeight = this.dataLayout.length <= 16 ? 400 : 200;
-            _opts.yMin = _opts.yMax = this.scaleGlobal ? 0 : undefined;
-            _opts.dataBuffer = new Array(this.dataLayout.length).fill(0).map(() => {
-                return {
-                    chartData: {
-                        labels: [],
-                        datasets: [{
-                            data: []
-                        }]
-                    },
-                    updated: false,
-                    svgCallback: function (url) {
-                        _opts.svg = url;
-                    }
-                };
-            });
+            _opts.graphWidth = window.innerWidth - 40;
+            _opts.scrollFrameHeight = window.innerHeight - 200;
+            if (this.scaleGlobal === true) {
+                if (typeof _opts.yMax === 'undefined') {
+                    _opts.yMin = 0.0;
+                    _opts.yMax = 0.0;
+                }
+            }
+            _opts.graphHeight = this.dataLayout.length <= 16 ? 560 : 276;
+            if (this.dataLayout.length !== _opts.dataBuffer.length) {
+                _opts.dataBuffer = [];
+                for (let n = 0; n < this.dataLayout.length; n += 1) {
+                    _opts.dataBuffer.push({
+                        chartData: {
+                            labels: [],
+                            datasets: [{
+                                data: []
+                            }]
+                        },
+                        dirty: false,
+                        svgCallback: _svgCallback
+                    });
+                }
+            }
             return _opts;
         };
 
-        _opts.debounce = undefined;
-        window.addEventListener('resize', function() {
-            if (_opts.debounce) {
-                clearTimeout(_opts.debounce);
+        window.addEventListener('resize', () => {
+            if (this.debounce) {
+                clearTimeout(this.debounce);
             }
-            _opts.debounce = setTimeout(function () {
+            this.debounce = setTimeout(() => {
                 _opts.graphWidth = window.innerWidth - 40;
                 _opts.scrollFrameHeight = window.innerHeight - 200;
                 _opts.debounce = undefined;
             }, 200);
         });
 
-        _opts.streamService = _appRef.service('datastreams');
-        _opts.streamService.on('dataframe', function (frame) {
-            for (let i in frame._value) {
-                const bufferObj = _opts.dataBuffer[i];
-                if (bufferObj.chartData.datasets.length > 0) {
-                    let val = frame._value[i] * Math.pow(10, 6);
-                    if (_opts.yMax && !Math.abs(val) > _opts.yMax) {
-                        _opts.yMax = Math.abs(val);
-                        _opts.yMin = _opts.yMax * -1.0;
+        this.streamService = _appRefs.get(this).service('datastreams');
+        this.streamService.on('dataframe', function (frame) {
+            if (Array.isArray(_opts.dataBuffer) && _opts.dataBuffer.length > 0) {
+                for (let i in frame._value) {
+                    if (i >= _opts.dataBuffer.length) {
+                        return;
                     }
-                    bufferObj.chartData.datasets[0].data.push(val);
-                    bufferObj.chartData.labels.push(frame._time._value);
-                    bufferObj.updated = true;
+                    const bufferObj = _opts.dataBuffer[i];
+                    if (bufferObj.chartData.datasets.length > 0) {
+                        let val = frame._value[i] * Math.pow(10, 6);
+                        if (typeof _opts.yMax === 'number' && val * Math.sign(val) > _opts.yMax) {
+                            _opts.yMax = val * Math.sign(val);
+                            _opts.yMin = _opts.yMax * -1.0;
+                        }
+                        bufferObj.chartData.datasets[0].data.push(val);
+                        bufferObj.chartData.labels.push(frame._time._value);
+                        bufferObj.dirty = true;
+                    }
                 }
             }
         });
