@@ -45,7 +45,6 @@ Vue.component('dd-app-main', new AppMain());
 
 window.eventBus = new Vue();
 
-
 new Vue({
     el: '#datadeck'
 });

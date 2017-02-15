@@ -36,7 +36,11 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                exclude: /(node_modules)/
+                exclude: /(node_modules)/,
+                query: {
+                    presets: ['es2017'],
+                    plugins: ['transform-runtime']
+                }
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
@@ -73,12 +77,6 @@ if (process.env.NODE_ENV === 'production') {
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: '"production"'
-            }
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                warnings: false
             }
         }),
         new webpack.LoaderOptionsPlugin({

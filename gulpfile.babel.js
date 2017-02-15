@@ -67,14 +67,8 @@ gulp.task('ui-css', cb => {
 gulp.task('server-js', cb => {
     return gulp.src(['src/feathers-server/*.js', 'src/feathers-server/**/*.js'])
         .pipe(babel({
-            presets: [
-                'es2015', 'stage-0'
-            ],
-            plugins: [
-                'transform-class-properties',
-                'transform-runtime'
-            ],
-            sourceMap: 'both'
+            presets: ['es2017'],
+            plugins: ['transform-runtime']
         })).pipe(gulp.dest('build/')).on('close', cb);
 });
 
