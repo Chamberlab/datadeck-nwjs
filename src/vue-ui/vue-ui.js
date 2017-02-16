@@ -1,3 +1,5 @@
+require('babel-polyfill');
+
 import feathers from 'feathers/client';
 import hooks from 'feathers-hooks';
 import io from 'socket.io-client';

@@ -1,3 +1,5 @@
+require('babel-polyfill');
+
 import gulp from 'gulp';
 import { spawn } from 'child_process';
 import sequence from 'run-sequence';
@@ -66,10 +68,7 @@ gulp.task('ui-css', cb => {
 
 gulp.task('server-js', cb => {
     return gulp.src(['src/feathers-server/*.js', 'src/feathers-server/**/*.js'])
-        .pipe(babel({
-            presets: ['es2017'],
-            plugins: ['transform-runtime']
-        })).pipe(gulp.dest('build/')).on('close', cb);
+        .pipe(babel()).pipe(gulp.dest('build/')).on('close', cb);
 });
 
 

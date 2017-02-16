@@ -36,11 +36,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                exclude: /(node_modules)/,
-                query: {
-                    presets: ['es2017'],
-                    plugins: ['transform-runtime']
-                }
+                exclude: /(node_modules)/
             },
             {
                 test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
