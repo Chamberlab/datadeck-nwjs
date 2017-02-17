@@ -14,7 +14,7 @@ class DataStreamService {
         const _this = this;
         this._dataStream = new DataStream(params.query.dataPath);
         this._dataStream.open(dbName)
-            .then(uuid => {
+            .then(() => {
                 _this._dataStream.on('playbackend', function () {
                     _this.emit('playbackend');
                 });
