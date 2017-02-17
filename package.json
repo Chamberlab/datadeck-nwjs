@@ -79,6 +79,7 @@
     "socket.io-client": "^1.7.2",
     "sqlite": "^2.3.0",
     "through2": "^2.0.3",
+    "tiny-emitter": "^1.1.0",
     "usage": "^0.7.1",
     "vue": "^2.1.8",
     "vue-chartjs": "^2.3.3"

@@ -24,7 +24,6 @@ class ChannelPlot extends Vue {
         this.props = ['dataLayout', 'scaleGlobal', 'autoUpdate'];
         this.watch = {
             autoUpdate: function (val) {
-                // console.log(val);
                 _opts.autoUpdate = val;
             },
             scaleGlobal: function (val) {

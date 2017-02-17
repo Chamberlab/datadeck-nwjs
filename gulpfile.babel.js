@@ -67,7 +67,7 @@ gulp.task('ui-css', cb => {
 });
 
 gulp.task('server-js', cb => {
-    return gulp.src(['src/feathers-server/*.js', 'src/feathers-server/**/*.js'])
+    return gulp.src(['src/**/*.js'])
         .pipe(babel()).pipe(gulp.dest('build/')).on('close', cb);
 });
 

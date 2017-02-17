@@ -6,7 +6,7 @@ class LineChart extends Vue {
         super();
 
         this.template = '#dd-line-chart-tpl';
-        this.props = ['data'];
+        this.props = ['chartData'];
     }
 
     data() {

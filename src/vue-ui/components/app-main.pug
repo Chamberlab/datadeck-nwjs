@@ -16,7 +16,7 @@ template#dd-app-main-tpl
                 el-tab-pane(label="Plot", name="plot")
                     el-row.plot-options(:gutter="20")
                         el-col(:span="4")
-                            el-checkbox(v-model="autoUpdate", :true-value="2000") Auto Update Graphs
+                            el-checkbox(v-model="autoUpdate") Auto Update Graphs
                         el-col(:span="4")
                             el-checkbox(v-model="scaleGlobal") Global Y-Axis scale
                         el-col(:span="2", :offset="11")
