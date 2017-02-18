@@ -1,0 +1,6 @@
+template#dd-load-spiketrains-tpl
+    el-card(v-if='!metaData')
+        el-input(placeholder='Enter Spiketrain JSON path', v-model='dataPath')
+            el-button(@click="spiketrainsChooser", slot="append", v-if="!dataPath") Select JSON file
+            el-button(@click="openSpiketrains", slot="append", v-if="dataPath") Open
+        input.nodisplay#spiketrains-chooser(type="file", name="spiketrains", @change="updateSpiketrains")

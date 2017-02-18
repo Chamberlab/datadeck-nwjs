@@ -59,6 +59,21 @@ const ChannelMenu = Vue.extend({
                     };
                 });
                 _this.$emit('datalayout', _this.dataLayout);
+            } else if (type === 'DataEvent') {
+                _this.selectedChannels.push(target.data.uuid || target.data.title);
+                _this.dataLayout = [{
+                    title: target.data.title,
+                    timeRange: target.data.timeRange,
+                    data: {
+                        index: 0,
+                        value: 0.0,
+                        events: target.data.data,
+                        label: target.data.title,
+                        unit: target.data.type.unit,
+                        uuid: target.data.uuid
+                    }
+                }];
+                _this.$emit('datalayout', _this.dataLayout);
             } else {
                 throw new Error(`Type not implemented: ${type}`);
             }

@@ -9,7 +9,7 @@ class AppMain extends Vue {
 
         const _opts = {
             activeName: 'spec',
-            channelLayout: [],
+            channelLayout: undefined,
             dataLayout: undefined,
             channelKey: undefined,
             dataPath: undefined,
@@ -23,6 +23,10 @@ class AppMain extends Vue {
                 /* ignored */
             },
             handleDatasetOpen(data) {
+                this.channelLayout = data.channelLayout;
+                this.dataPath = data.dataPath;
+            },
+            handleSpiketrainsOpen(data) {
                 this.channelLayout = data.channelLayout;
                 this.dataPath = data.dataPath;
             },

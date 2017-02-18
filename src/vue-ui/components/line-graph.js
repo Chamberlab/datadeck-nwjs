@@ -73,17 +73,20 @@ export default Line.extend({
                             unitStepSize: 10,
                             parser: function (val) {
                                 return moment.unix(val);
-                            }
+                            },
+                            min: moment.unix(0)
                         },
                         ticks: {
-                            autoSkipPadding: 20
+                            autoSkipPadding: 20,
+                            beginAtZero: true,
+                            suggestedMin: 0
                         }
                     }],
                     yAxes: [{
                         label: 'mV',
                         gridLines:{
                             display: true
-                        }
+                        },
                     }]
                 }
             };
@@ -98,7 +101,7 @@ export default Line.extend({
                 _conf.scales.yAxes[0].ticks = {
                     maxTicksLimit: 10,
                     stepSize: 0.1,
-                    beginAtZero: false
+                    beginAtZero: true
                 };
             }
             return _conf;

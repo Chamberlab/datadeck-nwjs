@@ -10,6 +10,7 @@ import '../../build/theme/index.css';
 
 import Channel from './components/channel';
 import LoadDataset from './components/dataset-load';
+import LoadSpiketrains from './components/spiketrains-load';
 import LineGraph from './components/line-graph';
 // import LineChart from './components/line-chart';
 import Transport from './components/transport';
@@ -40,6 +41,7 @@ Vue.component('dd-channel-specs', new Channel.Specs());
 Vue.component('dd-channel-plot', new Channel.Plot(app));
 
 Vue.component('dd-load-dataset', new LoadDataset(app));
+Vue.component('dd-load-spiketrains', new LoadSpiketrains(app));
 //Vue.component('dd-line-chart', new LineChart(app));
 Vue.component('dd-line-graph', LineGraph);
 Vue.component('dd-transport', new Transport(app));

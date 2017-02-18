@@ -1,12 +1,17 @@
 template#dd-app-main-tpl
     el-row(:gutter="20")
-        el-col(:span="24")
+        el-col(:span="24", v-if='!channelLayout')
             dd-load-dataset(@openset='handleDatasetOpen')
+
+        el-col(:span="24", v-if='!channelLayout')
+            dd-load-spiketrains(@openspiketrains='handleSpiketrainsOpen')
+
+        el-col(:span="24", v-if='channelLayout')
             dd-channel-menu(:channel-layout='channelLayout',
                 @datalayout='handleDataLayout', @channelselect='handleChannelSelect')
 
-        el-col(:span="24")
-            dd-transport(v-if='dataLayout', :data-layout='dataLayout',
+        el-col(:span="24", v-if='dataLayout')
+            dd-transport(:data-layout='dataLayout',
                 :channel-key='channelKey', :data-path='dataPath')
 
         el-col(:span="24", v-if='dataLayout')

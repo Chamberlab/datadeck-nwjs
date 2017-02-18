@@ -32,6 +32,16 @@ class ChannelPlot extends Vue {
                         _opts.yMin = 0.0;
                         _opts.yMax = 0.0;
                     }
+                    const _this = this;
+                    this.dataLayout.map(channel => {
+                        if (channel.data.valueRange) {
+                            _this.yMax = Math.max(_this.yMax, Math.max(
+                                Math.abs(channel.data.valueRange.max),
+                                Math.abs(channel.data.valueRange.min)
+                            ));
+                            _this.yMin = _this.yMax * -1.0;
+                        }
+                    });
                 } else {
                     _opts.yMin = undefined;
                     _opts.yMax = undefined;
@@ -48,19 +58,33 @@ class ChannelPlot extends Vue {
                     _opts.yMax = 0.0;
                 }
             }
-            _opts.graphHeight = this.dataLayout.length <= 16 ? 560 : 276;
+            _opts.graphHeight = 276; // this.dataLayout.length <= 16 ? 560 : 276;
             if (this.dataLayout.length !== _opts.dataBuffer.length) {
                 _opts.dataBuffer = [];
+                const _this = this;
                 for (let n = 0; n < this.dataLayout.length; n += 1) {
                     _opts.dataBuffer.push({
                         chartData: {
-                            labels: [],
+                            labels: _this.dataLayout[n].data.events ?
+                                _this.dataLayout[n].data.events.map(evt => {
+                                    return evt[0];
+                                }) : [],
                             datasets: [{
-                                data: []
+                                data: _this.dataLayout[n].data.events ?
+                                    _this.dataLayout[n].data.events.map(evt => {
+                                        return evt[1];
+                                    }) : []
                             }]
                         },
-                        dirty: false
+                        dirty: Array.isArray(_this.dataLayout[n].data.events)
                     });
+                    if (this.scaleGlobal === true && _this.dataLayout[n].data.valueRange) {
+                        this.yMax = Math.max(this.yMax, Math.max(
+                            Math.abs(_this.dataLayout[n].data.valueRange.max),
+                            Math.abs(_this.dataLayout[n].data.valueRange.max)
+                        ));
+                        this.yMin = this.yMax * -1.0;
+                    }
                 }
             }
             return _opts;
