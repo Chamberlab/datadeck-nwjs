@@ -8,6 +8,31 @@ export default Line.extend({
     watch: {
         autoUpdate: function (val) {
             this.data.autoUpdate = val;
+            if (val) {
+                this.renderAll();
+            }
+        }
+    },
+    methods: {
+        renderAll: function () {
+            if (this.timeout) {
+                clearTimeout(this.timeout);
+                this.timeout = undefined;
+            }
+            this.needsUpdate = this.needsUpdate || this.data.dirty;
+            if (!this.isUpdating && this.needsUpdate) {
+                this.isUpdating = true;
+                this.renderChart(this.data.chartData, this.chartConfig);
+                this.needsUpdate = false;
+                this.data.dirty = false;
+                this.isUpdating = false;
+            }
+            if (this.autoUpdate) {
+                const _this = this;
+                this.timeout = setTimeout(function () {
+                    _this.renderAll();
+                }, 2000);
+            }
         }
     },
     computed: {
@@ -109,31 +134,11 @@ export default Line.extend({
             }, 100);
         });
 
-        const _renderAll = function () {
-            if (_this.timeout) {
-                clearTimeout(_this.timeout);
-                _this.timeout = undefined;
-            }
-            _this.needsUpdate = _this.needsUpdate || _this.data.dirty;
-            if (!_this.isUpdating && _this.needsUpdate) {
-                _this.isUpdating = true;
-                _this.renderChart(_this.data.chartData, _this.chartConfig);
-                _this.needsUpdate = false;
-                _this.data.dirty = false;
-                _this.isUpdating = false;
-            }
-            if (_this.autoUpdate) {
-                _this.timeout = setTimeout(function () {
-                    _renderAll();
-                }, 2000);
-            }
-        };
-
         window.eventBus.$on('render_plots', function () {
             _this.needsUpdate = true;
-            _renderAll();
+            _this.renderAll();
         });
 
-        _renderAll();
+        this.renderAll();
     }
 });
