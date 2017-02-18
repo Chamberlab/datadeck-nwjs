@@ -5,6 +5,11 @@ const _dataRefs = new WeakMap();
 
 export default Line.extend({
     props: ['data', 'label', 'ymax', 'ymin', 'autoUpdate'],
+    watch: {
+        autoUpdate: function (val) {
+            this.data.autoUpdate = val;
+        }
+    },
     computed: {
         chartConfig: function () {
             const _conf = {
@@ -117,10 +122,10 @@ export default Line.extend({
                 _this.data.dirty = false;
                 _this.isUpdating = false;
             }
-            if (typeof _this.autoUpdate === 'number') {
+            if (_this.autoUpdate) {
                 _this.timeout = setTimeout(function () {
                     _renderAll();
-                }, _this.autoUpdate);
+                }, 2000);
             }
         };
 
