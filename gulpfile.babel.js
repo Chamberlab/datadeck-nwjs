@@ -77,7 +77,7 @@ gulp.task('server-js', cb => {
 // Build the apps
 
 const nwjsOpts = {
-    version: '0.20.1',
+    version: '0.21.3',
     outputDir: 'dist/',
     executableName: 'DataDeck',
     withFFmpeg: false,
