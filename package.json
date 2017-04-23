@@ -67,7 +67,7 @@
     "babel-runtime": "^6.23.0",
     "chamberlib": "git+https://github.com/Chamberlab/node-chamberlib.git",
     "d3": "^4.5.0",
-    "d3-node": "^0.2.0",
+    "d3-node": "^1.0.0",
     "debug": "^2.6.0",
     "element-ui": "^1.1.6",
     "feathers": "^2.0.3",
