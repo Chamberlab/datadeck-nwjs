@@ -38,7 +38,7 @@
     "del": "^2.2.2",
     "element-theme": "^0.7.0",
     "element-theme-default": "git+https://github.com/ElementUI/theme-default.git",
-    "eslint": "^3.14.1",
+    "eslint": "^4.1.0",
     "file-loader": "^0.10.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
