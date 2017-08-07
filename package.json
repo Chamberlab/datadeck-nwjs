@@ -41,7 +41,7 @@
     "eslint": "^3.14.1",
     "file-loader": "^0.10.0",
     "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
+    "gulp-babel": "^7.0.0",
     "gulp-copy": "^1.0.0",
     "gulp-eslint": "^3.0.1",
     "gulp-less": "^3.3.0",
